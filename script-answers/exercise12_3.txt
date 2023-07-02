@@ -1,0 +1,4 @@
+console.log('Hello world')
+
+Save file: Ctrl + O
+Confirm file name: /usr/src/app/index.js
