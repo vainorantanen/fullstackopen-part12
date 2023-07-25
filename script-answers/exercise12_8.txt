@@ -1,0 +1,11 @@
+1. Run mongodb container with command: docker compose -f docker-compose.dev.yml up
+2. Run: docker exec -it todo-backend-mongo-1 bash
+3. Run: mongosh -u root -p example
+4. Run: show dbs
+
+Command to insert:
+
+db.todos.insertOne({
+  text: "Increase the number of tools in my toolbelt",
+  done: false
+})
