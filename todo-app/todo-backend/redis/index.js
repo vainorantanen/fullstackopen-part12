@@ -21,7 +21,20 @@ if (!REDIS_URL) {
   setAsync = promisify(client.set).bind(client)    
 }
 
+const incrementTodoCounterAsync = async () => {
+  try {
+    const currentCount = await getAsync('added_todos');
+    const newCount = currentCount ? parseInt(currentCount) + 1 : 1;
+    await setAsync('added_todos', newCount);
+    return newCount;
+  } catch (error) {
+    console.error('Error incrementing the todo counter:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getAsync,
-  setAsync
+  setAsync,
+  incrementTodoCounterAsync
 }
