@@ -8,6 +8,9 @@ yarn-error.log*
 mongo_data
 /mongo_data
 
+/redis_data
+redis_data
+
 # Runtime data
 pids
 *.pid
