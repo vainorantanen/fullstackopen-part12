@@ -20,4 +20,6 @@ COPY . .
 ENV DEBUG=todo-backend:*
 
 # Use Nodemon to start the server
-CMD ["nodemon", "index.js"]
+CMD ["npm", "run", "dev"]
+
+# ["nodemon", "index.js"]
