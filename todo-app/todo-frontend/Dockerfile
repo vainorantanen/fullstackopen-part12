@@ -28,13 +28,17 @@ RUN npm ci
 RUN npm run build
 
 # Stage 3: Final Image
-FROM node:16
+# FROM node:16
 
-WORKDIR /usr/src/app
+FROM nginx:1.20-alpine
+
+#WORKDIR /usr/src/app
 
 # Copy only the built files from the previous stage (build)
-COPY --from=build /usr/src/app/build ./build
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
+
+# ./build
 
 # Install serve to run the production build
-RUN npm install -g serve
-CMD ["serve", "build"]
+# RUN npm install -g serve
+# CMD ["serve", "build"]

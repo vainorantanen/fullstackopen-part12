@@ -21,7 +21,7 @@ services:
       - ./redis_data:/data
   app:
     build:
-      context: .
+      context: ./todo-backend
       dockerfile: dev.Dockerfile  # Use the dev.Dockerfile for building the image
     ports:
       - 3000:3000
@@ -29,6 +29,28 @@ services:
       - REDIS_URL=redis://redis:6379
       - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
     volumes:
-      - .:/usr/src/app
+      - ./todo-backend:/usr/src/app
   debug-helper:
     image: busybox
+
+  frontend-app:
+    image: todo-frontend-dev-root
+    build:
+      context: ./todo-frontend # The context will pick this directory as the "build context"
+      dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+    volumes:
+      - ./todo-frontend:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
+    ports:
+      - 5001:3000
+    container_name: todo-frontend-dev-root
+
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - app
+      - frontend-app

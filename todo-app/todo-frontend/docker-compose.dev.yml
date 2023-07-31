@@ -9,5 +9,5 @@ services:
     volumes:
       - ./:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
     ports:
-      - 5001:3000
+      - 5001:5001
     container_name: todo-frontend-dev
