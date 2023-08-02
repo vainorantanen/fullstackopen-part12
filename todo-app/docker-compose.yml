@@ -1,16 +1,14 @@
 services:
   app:
-    image: todo-frontend-dev
+    image: todo-frontend-prod
     build:
       context: ./todo-frontend # The context will pick this directory as the "build context"
-      dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
+      dockerfile: Dockerfile # This will simply tell which dockerfile to read
+    ports:
+      - 5001:80
     volumes:
       - ./todo-frontend/:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
-    environment:
-      - WDS_SOCKET_HOST=127.0.0.1
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
-    container_name: todo-frontend-dev
+    container_name: todo-frontend-prod
 
   mongo:
     image: mongo
@@ -35,7 +33,7 @@ services:
   server:
     build:
       context: ./todo-backend
-      dockerfile: dev.Dockerfile  # Use the dev.Dockerfile for building the image
+      dockerfile: Dockerfile  # Use the dev.Dockerfile for building the image
     environment:
       - REDIS_URL=redis://redis:6379
       - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
@@ -48,7 +46,7 @@ services:
   nginx:
     image: nginx:1.20.1
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 8080:80
     container_name: reverse-proxy-todo

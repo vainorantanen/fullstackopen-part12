@@ -19,7 +19,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Set the environment variable for the backend URL
-ENV REACT_APP_BACKEND_URL=http://localhost:3000
+ENV REACT_APP_BACKEND_URL=http://localhost:8080/api/
 
 # Install dependencies for production build
 RUN npm ci
@@ -36,9 +36,3 @@ FROM nginx:1.20-alpine
 
 # Copy only the built files from the previous stage (build)
 COPY --from=build /usr/src/app/build /usr/share/nginx/html
-
-# ./build
-
-# Install serve to run the production build
-# RUN npm install -g serve
-# CMD ["serve", "build"]
