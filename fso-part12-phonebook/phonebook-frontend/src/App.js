@@ -1,19 +1,9 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 import './index.css'
 import Success from './components/SuccesfulAdd'
 
-const Name = ({person}) => {
-  return (
-    <li>
-      {person.name} {person.number}
-    </li>
-  )
-}
-
 const Filter = (props) => {
-  console.log("FILTERIN", props)
   return (
     <div>
       filter shown with <input value={props.value} onChange={props.onChange}/>
@@ -36,20 +26,16 @@ const App = () => {
         setPersons(initialPersons)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
 
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleFilterChange = (event) => {
-    console.log(event.target.value)
     setNewFilter(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
