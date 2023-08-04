@@ -55,13 +55,14 @@ const App = () => {
         // etsitään jo olemassa olevan nimen id
         const etsittyHenkilo = persons.find(person => person.name === nameObj.name)
         //console.log("Henkilo jonka numero muutetaan: ", etsittyHenkilo)
-        const henkilo = persons.find(person => person.id === etsittyHenkilo.id)
+        const henkilo = persons.find(person => person._id === etsittyHenkilo._id)
         const changedHenkilo = {...henkilo, number: nameObj.number}
-        //console.log("muuttunut hlo: " , changedHenkilo)
+        console.log("muuttunut hlo: " , changedHenkilo)
+        console.log("hlo id", henkilo._id)
         personService
-          .update(henkilo.id, changedHenkilo)
+          .update(henkilo._id, changedHenkilo)
           .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== etsittyHenkilo.id ? person : changedHenkilo))
+            setPersons(persons.map(person => person._id !== etsittyHenkilo._id ? person : changedHenkilo))
             setSuccessMessage(`Number changed to ${nameObj.number}`)
             setTimeout(() => {
               setSuccessMessage(null)
@@ -71,7 +72,7 @@ const App = () => {
             alert(
               `the note '${henkilo.name}' was already deleted from server`
             )
-            setPersons(persons.filter(n => n.id !== henkilo.id))
+            setPersons(persons.filter(n => n._id !== henkilo._id))
           })
           setNewName('')
           setNewNumber('')
@@ -100,7 +101,7 @@ const App = () => {
   const poista = (id) => {
     const hlo = {}
     for (var i = 0; i < persons.length; i++) {
-      if (persons[i].id === id) {
+      if (persons[i]._id === id) {
         hlo.name = persons[i].name
       }
     }
@@ -114,7 +115,7 @@ const App = () => {
         setTimeout(() => {
           setSuccessMessage(null)
         }, 3000)
-        setPersons(persons.filter(p => p.id !== id))
+        setPersons(persons.filter(p => p._id !== id))
       })
     } else {
       return
@@ -145,9 +146,9 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         <ul>
-          {namesToShow.map(person => <li key={person.id}>
+          {namesToShow.map(person => <li key={person._id}>
             {person.name} {person.number}
-            <button onClick={() => poista(person.id)}>
+            <button onClick={() => poista(person._id)}>
               Delete
             </button>
             </li>)}

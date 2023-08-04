@@ -52,7 +52,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
-  //console.log(req.params)
+  console.log("del params", req.params)
   //const id = Number(req.params.id)
   Person.findByIdAndRemove(req.params.id).then(result => {
     console.log(result)
