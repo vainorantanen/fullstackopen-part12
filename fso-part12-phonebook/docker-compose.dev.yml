@@ -8,8 +8,6 @@ services:
       dockerfile: dev.Dockerfile # This will simply tell which dockerfile to read
     volumes:
       - ./phonebook-frontend/:/usr/src/app # The path can be relative, so ./ is enough to say "the same location as the docker-compose.yml"
-    ports:
-      - 5001:5001
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
@@ -41,12 +39,20 @@ services:
       dockerfile: dev.Dockerfile  # Use the dev.Dockerfile for building the image
     volumes:
       - ./phonebook-backend/:/usr/src/app
-    ports:
-      - 3000:3000
     environment:
       - REDIS_URL=redis://redis:6379
       - MONGO_URL=mongodb://the_username:the_password@mongo:27017/the_database
   
   debug-helper:
     image: busybox
+  
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy-phonebook
+    depends_on:
+      - app # wait for the frontend container to be started
     
