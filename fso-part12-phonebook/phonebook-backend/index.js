@@ -5,17 +5,31 @@ const logger = require('morgan');
 const cors = require('cors');
 const app = express()
 
-const Person = require('./models/person')
+const { Person } = require('./mongo')
 const { response } = require('express')
+const redis = require('./redis')
 
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json())
 
-app.get('/api/persons', (request, response) => {
-  Person.find({}).then(persons => {
-    response.json(persons)
-  })
+/* GET statistics data. */
+app.get('/statistics', async (req, res) => {
+  try {
+    const addedPersonsCount = await redis.getAsync('added_persons');
+    const statistics = {
+      added_persons: parseInt(addedPersonsCount) || 0,
+    };
+    res.send(statistics);
+  } catch (error) {
+    console.error('Error retrieving statistics:', error);
+    return res.status(500).send({ error: 'Error retrieving statistics' });
+  }
+});
+
+app.get('/api/persons', async (_, response) => {
+  const persons = await Person.find({})
+  response.send(persons)
 })
 
 app.get('/info', (req, res) => {
@@ -48,10 +62,9 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 })
 
-app.post('/api/persons', (request, response, next) => {
+app.post('/api/persons', async (request, response, next) => {
   const body = request.body
-console.log("Req bod", body)
-
+  console.log("reqbod", body)
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: 'name or number missing'
@@ -69,6 +82,8 @@ console.log("Req bod", body)
     response.json(savedPerson)
   })
     .catch(error => next(error))
+
+  await redis.incrementPersonCounterAsync();
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
